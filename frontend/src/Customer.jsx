@@ -5,7 +5,8 @@ import axios from 'axios';
 
 function Customer() {
 
-    const [customer, setCustomer] = useState({})
+    const [customer, setCustomer] = useState([])
+
 
     //  console.log('Customer array', customer)
     useEffect(() => {

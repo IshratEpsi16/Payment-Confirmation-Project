@@ -41,7 +41,29 @@ const dbConfig = {
 //         });
 //     });
 // });
-// // ... (existing code)
+// ... create page
+app.get('/', (req, res) => {
+    oracledb.getConnection(dbConfig, (err, connection) => {
+        if (err) {
+            console.error('Error connecting to the database:', err.message);
+            return;
+        }
+
+        const sql = "SELECT a1.LOOKUP_CODE PAYEE_ID,a1.meaning PAYEE_NAME,a1.description CASH_AMOUNT,a1.tag MAIL_ADDRESS,TO_CHAR(A1.START_DATE_ACTIVE,'DD-MON - YYYY') START_DATE,TO_CHAR(A1.END_DATE_ACTIVE,'DD - MON - YYYY') END_DATE FROM apps.fnd_lookup_values a1, apps.fnd_lookup_types_VL a2 WHERE a1.lookup_type = 'SSGIL_CASH_PAYMENT_INFO' AND a1.lookup_type = a2.lookup_type order by  3  asc";
+        connection.execute(sql, (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err.message);
+                connection.close();
+                return;
+            }
+
+            //res.json({ data: result.rows });
+            res.json(result.rows);
+
+            connection.close();
+        });
+    });
+});
 
 app.post('/login', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
@@ -51,10 +73,10 @@ app.post('/login', (req, res) => {
         }
 
         const sql =
-            "SELECT * FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE Employee_ID = :employee_id AND Employee_Password = :employee_password";
+            "SELECT * FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
 
         const bindParams = {
-            employee_id: req.body.employeeId,
+            employee_id: parseInt(req.body.employeeId),
             employee_password: req.body.employeePassword
         };
 
@@ -62,11 +84,14 @@ app.post('/login', (req, res) => {
             if (err) {
                 console.error('Error executing query:', err.message);
                 connection.close();
-                return res.status(500).json({ error: 'Error executing query' });
+                return res.status(500).json({ error: 'Error executing query', details: err.message });
             }
 
-            // Change the backend response to send JSON
-            if (result.length > 0) {
+            //console.log('Employee ID:', req.body.employeeId);
+            // console.log('Password:', req.body.employeePassword);
+
+
+            if (result.rows.length > 0) {
                 // User authentication successful
                 connection.close();
                 return res.json({ status: 'success' });
@@ -75,10 +100,13 @@ app.post('/login', (req, res) => {
                 connection.close();
                 return res.status(401).json({ error: 'Invalid ID or password' });
             }
-
         });
     });
 });
+
+
+
+
 app.post('/signup', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
         if (err) {

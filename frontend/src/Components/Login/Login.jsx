@@ -27,13 +27,14 @@ const Login = () => {
                     navigate('/home');
                 } else {
                     console.error('Login failed. Server response:', res.data);
-                    alert('Invalid ID');
+                    alert('Invalid ID or password');
                 }
             })
             .catch(err => {
                 console.error("Error during POST request:", err);
                 alert('Error during login. Please try again.');
             });
+
 
         // setErrors(Validation(values))
     }
