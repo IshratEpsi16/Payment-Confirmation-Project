@@ -40,6 +40,7 @@ const CreatePage = () => {
                             <th>Mail</th>
                             <th>Start Date</th>
                             <th>End Date</th>
+                            <th>Period</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,8 @@ const CreatePage = () => {
                                 <td>{item.MAIL_ADDRESS}</td>
                                 <td>{item.START_DATE}</td>
                                 <td>{item.END_DATE}</td>
+                                <td>{item.CURRENT_PERIOD}</td>
+
                             </tr>
                         ))}
                     </tbody>
