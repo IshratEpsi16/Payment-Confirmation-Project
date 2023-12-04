@@ -48,11 +48,11 @@ const CreatePage = () => {
                             <tr key={i}>
                                 <td>{item.PAYEE_ID}</td>
 
-                                <td>{item[1]}</td>
-                                <td>{item[2]}</td>
-                                <td>{item[3]}</td>
-                                <td>{item[4]}</td>
-                                <td>{item[5]}</td>
+                                <td>{item.PAYEE_NAME}</td>
+                                <td>{item.CASH_AMOUNT}</td>
+                                <td>{item.MAIL_ADDRESS}</td>
+                                <td>{item.START_DATE}</td>
+                                <td>{item.END_DATE}</td>
                             </tr>
                         ))}
                     </tbody>

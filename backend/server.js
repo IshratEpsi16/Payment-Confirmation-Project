@@ -49,7 +49,8 @@ app.get('/', (req, res) => {
             return;
         }
 
-        const sql = "SELECT a1.LOOKUP_CODE PAYEE_ID,a1.meaning PAYEE_NAME,a1.description CASH_AMOUNT,a1.tag MAIL_ADDRESS,TO_CHAR(A1.START_DATE_ACTIVE,'DD-MON - YYYY') START_DATE,TO_CHAR(A1.END_DATE_ACTIVE,'DD - MON - YYYY') END_DATE FROM apps.fnd_lookup_values a1, apps.fnd_lookup_types_VL a2 WHERE a1.lookup_type = 'SSGIL_CASH_PAYMENT_INFO' AND a1.lookup_type = a2.lookup_type order by  3  asc";
+        const sql = "SELECT a1.LOOKUP_CODE PAYEE_ID, a1.meaning PAYEE_NAME, a1.description CASH_AMOUNT, a1.tag MAIL_ADDRESS, TO_CHAR(A1.START_DATE_ACTIVE, 'DD-MON - YYYY') START_DATE, TO_CHAR(A1.END_DATE_ACTIVE, 'DD - MON - YYYY') END_DATE FROM apps.fnd_lookup_values a1, apps.fnd_lookup_types_VL a2 WHERE a1.lookup_type = 'SSGIL_CASH_PAYMENT_INFO' AND a1.lookup_type = a2.lookup_type order by  3  asc";
+
         connection.execute(sql, (err, result) => {
             if (err) {
                 console.error('Error executing query:', err.message);
@@ -57,13 +58,27 @@ app.get('/', (req, res) => {
                 return;
             }
 
-            //res.json({ data: result.rows });
-            res.json(result.rows);
+            // Get column names dynamically
+            const columnNames = result.metaData.map(meta => meta.name);
+
+            // Convert the result rows to JSON format dynamically
+            const jsonData = result.rows.map(row => {
+                const rowObject = {};
+                columnNames.forEach((columnName, index) => {
+                    rowObject[columnName] = row[index];
+                });
+                return rowObject;
+            });
+
+            // Send the JSON response
+            res.json(jsonData);
 
             connection.close();
         });
     });
 });
+
+
 
 app.post('/login', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
