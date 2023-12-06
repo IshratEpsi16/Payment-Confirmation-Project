@@ -17,7 +17,7 @@ select * from XXCRM.ADMIN_TABLE
 
 ALTER TABLE  XXCRM.ADMIN_TABLE
 ADD COLUMN phone_number VARCHAR(15)
-
+-------------
 CREATE TABLE XXCRM.ADMIN_SIGNUP_TABLE (
     Employee_ID int,
     Employee_Name varchar(255),
@@ -48,3 +48,14 @@ TO_CHAR(A1.END_DATE_ACTIVE,'DD-MON-YYYY') END_DATE
  WHERE a1.lookup_type = 'SSGIL_CASH_PAYMENT_INFO'
  AND a1.lookup_type = a2.lookup_type
  order by  3  asc
+ 
+ -----details custom table
+ select * from XXSSGIL_CASH_PAY_DET
+ 
+ -- Assume you have a table named "your_table" with a column named "old_column_name"
+ALTER TABLE XXSSGIL_CASH_PAY_DET
+RENAME COLUMN  CURRENT_PERIOD1  TO   CURRENT_PERIOD
+
+-- Assume you have a table named "your_table" and you want to add a new column named "new_column" with the data type INT
+ALTER TABLE XXSSGIL_CASH_PAY_DET
+ADD Acknowledgement varchar(200)

@@ -12,36 +12,6 @@ const dbConfig = {
     connectionString: '10.27.1.174:1531/ebs_SSGPROD',
 };
 
-// app.get('/', (req, res) => {
-//     oracledb.getConnection(dbConfig, (err, connection) => {
-//         if (err) {
-//             console.error('Error connecting to the database:', err.message);
-//             return;
-//         }
-
-//         const sql = 'select * from XXCRM.ADMIN_SIGNUP_TABLE';
-//         connection.execute(sql, (err, result) => {
-//             if (err) {
-//                 console.error('Error executing query:', err.message);
-//                 connection.close();
-//                 return;
-//             }
-
-//             // Transform the result rows to JSON
-//             const jsonData = result.rows.map(row => {
-//                 const jsonRow = {};
-//                 result.metaData.forEach((meta, i) => {
-//                     jsonRow[meta.name] = row[i];
-//                 });
-//                 return jsonRow;
-//             });
-
-//             res.json(jsonData);
-//             connection.close();
-//         });
-//     });
-// });
-// ... create page
 app.get('/', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
         if (err) {
@@ -76,8 +46,6 @@ app.get('/', (req, res) => {
         });
     });
 });
-
-
 
 app.post('/login', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
@@ -138,6 +106,45 @@ app.post('/signup', (req, res) => {
             email: req.body.email,
             employee_password: req.body.employeePassword,
             confirm_password: req.body.confirmPassword
+        };
+
+        connection.execute(sql, bindVars, { autoCommit: true }, (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err.message);
+                connection.close();
+                return res.status(500).json({ error: 'Database query error' });
+            }
+
+            res.json({ message: 'Record created successfully' });
+
+            connection.close();
+        });
+    });
+});
+app.post('/create', (req, res) => {
+    oracledb.getConnection(dbConfig, (err, connection) => {
+        if (err) {
+            console.error('Error connecting to the database:', err.message);
+            return res.status(500).json({ error: 'Database connection error' });
+        }
+
+        // You can get the selected organization_id directly from the request body
+
+        const payee_id = req.body.payeeId;
+        const payee_name = req.body.payeeName;
+        const cash_amount = req.body.cashAmount;
+        const mail_address = req.body.mailAddress;
+        //const current_period = req.body.currentPeriod;
+
+        const sql =
+            "INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(TRANSACTION_ID,PAYEE_ID,PAYEE_NAME,CASH_AMOUNT,MAIL_ADDRESS,CURRENT_PERIOD) VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount,:mail_address, :current_period)"
+        const bindVars = {
+            payee_id: payee_id,
+            payee_name: payee_name,
+            cash_amount: cash_amount,
+            mail_address: mail_address,
+            current_period: req.body.currentPeriod
+
         };
 
         connection.execute(sql, bindVars, { autoCommit: true }, (err, result) => {
