@@ -10,44 +10,61 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 const CreatePage = () => {
 
-    const [customer, setCustomer] = useState([])
+    const [customer, setCustomer] = useState([]);
     const [payeeId, setPayeeId] = useState('');
     const [payeeName, setPayeeName] = useState('');
     const [cashAmount, setCashAmount] = useState('');
     const [mailAddress, setMailAddress] = useState('');
     const [currentPeriod, setCurrentPeriod] = useState('');
-
+    const [selectedRow, setSelectedRow] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
 
-    //  console.log('Customer array', customer)
     useEffect(() => {
         axios.get('http://localhost:8081/')
             .then(res => setCustomer(res.data))
-            .catch(err => console.log(err)); // Use catch to handle errors
-    }, [])
+            .catch(err => console.log(err));
+    }, []);
+
+    const handleDateChange = (date) => {
+        setCurrentDate(date);
+        setCurrentPeriod(date.toISOString()); // Save as UTC in state
+    };
+
     const navigate = useNavigate();
+
+    function handleSendButtonClick(item) {
+        setSelectedRow(item);
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
 
+        if (!selectedRow) {
+            console.error("No row selected for submission.");
+            return;
+        }
+
+        const { PAYEE_ID, PAYEE_NAME, CASH_AMOUNT, MAIL_ADDRESS } = selectedRow;
+
+        // Convert currentPeriod to local time before sending it to the server
+        const localCurrentPeriod = new Date(currentPeriod).toLocaleString();
+
         axios.post('http://localhost:8081/create', {
-
-            payeeId: payeeId,
-            payeeName: payeeName,
-            cashAmount: cashAmount,
-            mailAddress: mailAddress,
-            currentPeriod
-
+            payeeId: PAYEE_ID,
+            payeeName: PAYEE_NAME,
+            cashAmount: CASH_AMOUNT,
+            mailAddress: MAIL_ADDRESS,
+            currentPeriod: localCurrentPeriod, // Send local time to the server
         })
             .then(res => {
                 console.log(res);
+                alert('Notification sent to user');
                 navigate('/create');
             })
             .catch(err => {
                 console.error("Error during POST request:", err);
             });
     }
-
-
     return (
         <div>
             <nav className="navbar bg-body-tertiary">
@@ -69,7 +86,7 @@ const CreatePage = () => {
                     <table className='table table-striped-columns"'>
                         <thead className='table-info '>
                             <tr>
-                                <th>Transaction No</th>
+
                                 <th>Payee ID</th>
                                 <th>Payee Name</th>
                                 <th>Cash Amount</th>
@@ -82,29 +99,22 @@ const CreatePage = () => {
                             {console.log('cy', customer)}
                             {customer.map((item, i) => (
                                 <tr key={i}>
-                                    <td></td>
+
                                     <td>{item.PAYEE_ID}</td>
 
                                     <td>{item.PAYEE_NAME}</td>
                                     <td>{item.CASH_AMOUNT}</td>
                                     <td>{item.MAIL_ADDRESS}</td>
                                     <td>
-                                        <DatePicker selected={currentDate}
+                                        <DatePicker
+                                            selected={currentDate}
                                             className='date'
-                                            onChange={(date) => setCurrentDate(date)}
-                                            dateFormat="MMMM-yyyy">
-                                            <input
-                                                type="date"
-                                                className='date'
-                                                id='currentPeriod'
-                                                name='currentPeriod'
-                                                value={currentPeriod}
-                                                onChange={e => setCurrentPeriod(e.target.value)} />
-                                        </DatePicker>
-
+                                            onChange={(date) => handleDateChange(date)}
+                                            dateFormat="MMMM-yyyy"
+                                        />
                                     </td>
 
-                                    <td><button className='btn btn-info text-light'>Send</button></td>
+                                    <td><button className='btn btn-info text-light' onClick={() => handleSendButtonClick(item)} >Send</button></td>
 
                                 </tr>
                             ))}

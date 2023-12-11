@@ -128,23 +128,25 @@ app.post('/create', (req, res) => {
             return res.status(500).json({ error: 'Database connection error' });
         }
 
-        // You can get the selected organization_id directly from the request body
-
         const payee_id = req.body.payeeId;
         const payee_name = req.body.payeeName;
         const cash_amount = req.body.cashAmount;
         const mail_address = req.body.mailAddress;
-        //const current_period = req.body.currentPeriod;
+        const current_period = req.body.currentPeriod;
 
         const sql =
-            "INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(TRANSACTION_ID,PAYEE_ID,PAYEE_NAME,CASH_AMOUNT,MAIL_ADDRESS,CURRENT_PERIOD) VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount,:mail_address, :current_period)"
+            "INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(" +
+            "TRANSACTION_ID, PAYEE_ID, PAYEE_NAME, CASH_AMOUNT, MAIL_ADDRESS, CURRENT_PERIOD, CREATION_DATE) " +
+            "VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, :mail_address, :current_period, " +
+            "FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Dhaka')";
+
+
         const bindVars = {
             payee_id: payee_id,
             payee_name: payee_name,
             cash_amount: cash_amount,
             mail_address: mail_address,
-            current_period: req.body.currentPeriod
-
+            current_period: current_period
         };
 
         connection.execute(sql, bindVars, { autoCommit: true }, (err, result) => {
@@ -160,6 +162,7 @@ app.post('/create', (req, res) => {
         });
     });
 });
+
 
 
 
