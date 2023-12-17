@@ -110,7 +110,7 @@ const CreatePage = () => {
                                             selected={currentDate}
                                             className='date'
                                             onChange={(date) => handleDateChange(date)}
-                                            dateFormat="MMMM-yyyy"
+                                            dateFormat="MMM-yy"
                                         />
                                     </td>
 

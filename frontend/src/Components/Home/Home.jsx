@@ -40,7 +40,7 @@ const Home = () => {
                         </div>
                     </div>
                     <div className='col-1'>
-                        <div className='right' style={{ height: '638px', width: '205px' }}>
+                        <div className='right' style={{ height: '638px', width: '197px' }}>
                             <img src={profile} className='icon' alt="Bootstrap" width="30" height="24" />
                             <div className='text-light p-3 fw-bold'>
                                 <p>ID :</p>

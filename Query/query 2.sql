@@ -10,5 +10,5 @@
    WHERE a1.lookup_type = 'SSGIL_CASH_PAYMENT_INFO'
          AND a1.lookup_type = a2.lookup_type
 ORDER BY 3 ASC
-
+--------------------sequence-------------
  select XXCRM.XXSSGIL_CASH_PAY_S.nextval from dual

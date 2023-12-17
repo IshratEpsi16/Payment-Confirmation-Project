@@ -59,3 +59,5 @@ RENAME COLUMN  CURRENT_PERIOD1  TO   CURRENT_PERIOD
 -- Assume you have a table named "your_table" and you want to add a new column named "new_column" with the data type INT
 ALTER TABLE XXSSGIL_CASH_PAY_DET
 ADD Acknowledgement varchar(200)
+------main table------------
+select * from  XXSSGIL_CASH_PAY_DET

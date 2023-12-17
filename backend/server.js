@@ -133,12 +133,14 @@ app.post('/create', (req, res) => {
         const cash_amount = req.body.cashAmount;
         const mail_address = req.body.mailAddress;
         const current_period = req.body.currentPeriod;
-
         const sql =
             "INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(" +
             "TRANSACTION_ID, PAYEE_ID, PAYEE_NAME, CASH_AMOUNT, MAIL_ADDRESS, CURRENT_PERIOD, CREATION_DATE) " +
-            "VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, :mail_address, :current_period, " +
-            "FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Dhaka')";
+            "VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, :mail_address, " +
+            "TO_CHAR(TO_DATE(:current_period, 'MM/DD/YYYY HH:MI:SS AM'), 'Mon-YY'), FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Dhaka')";
+
+
+
 
 
         const bindVars = {
