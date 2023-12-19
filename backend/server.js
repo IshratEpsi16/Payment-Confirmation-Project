@@ -55,7 +55,7 @@ app.post('/login', (req, res) => {
         }
 
         const sql =
-            "SELECT * FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
+            "SELECT EMPLOYEE_ID, EMPLOYEE_PASSWORD, ROLE FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
 
         const bindParams = {
             employee_id: parseInt(req.body.employeeId),
@@ -69,22 +69,37 @@ app.post('/login', (req, res) => {
                 return res.status(500).json({ error: 'Error executing query', details: err.message });
             }
 
-            //console.log('Employee ID:', req.body.employeeId);
-            // console.log('Password:', req.body.employeePassword);
-
+            // Log the entire result object to inspect its structure
+            console.log('result:', result);
 
             if (result.rows.length > 0) {
-                // User authentication successful
-                connection.close();
-                return res.json({ status: 'success' });
+                const user1 = result.rows[0];
+
+                // Check if the ROLE information exists in the user1 array
+                const role = user1[2]; // Assuming ROLE is in the third position (index 2)
+
+                console.log('role:', role); // Log the role to check its value
+
+                if (role === 'admin') {
+                    connection.close();
+                    return res.json({ status: 'success', role: 'admin' });
+                } else if (role === 'user') {
+                    connection.close();
+                    return res.json({ status: 'success', role: 'user' });
+                } else {
+                    connection.close();
+                    return res.status(401).json({ error: 'Invalid role' });
+                }
             } else {
                 // Invalid ID or password
                 connection.close();
                 return res.status(401).json({ error: 'Invalid ID or password' });
             }
+
         });
     });
 });
+
 
 
 

@@ -16,15 +16,28 @@ const Login = () => {
     })
     const navigate = useNavigate();
     const handleSubmit = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         axios.post('http://localhost:8081/login', {
             employeeId,
             employeePassword
+
         })
             .then(res => {
-                console.log(res);
+                console.log("Server Response:", res);
+
                 if (res.data || res.data.status === 'success') {
-                    navigate('/home');
+                    const role = res.data.role;
+
+                    if (role === 'admin') {
+                        // Redirect to the admin page
+                        navigate('/home');
+                    } else if (role === 'user') {
+                        // Redirect to the user page
+                        navigate('/userhome');
+                    } else {
+                        console.error('Invalid role:', role);
+                        alert('Invalid role');
+                    }
                 } else {
                     console.error('Login failed. Server response:', res.data);
                     alert('Invalid ID or password');
@@ -34,10 +47,9 @@ const Login = () => {
                 console.error("Error during POST request:", err);
                 alert('Error during login. Please try again.');
             });
+    };
 
 
-        // setErrors(Validation(values))
-    }
     // const handleInput = (event) => {
     //     setvalues(prev => ({ ...prev, [event.target.name]: [event.target.value] }))
 

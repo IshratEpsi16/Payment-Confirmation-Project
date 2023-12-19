@@ -75,4 +75,7 @@ select * from XXCRM.ADMIN_SIGNUP_TABLE
 UPDATE XXCRM.ADMIN_SIGNUP_TABLE
 SET role = 'user'
 WHERE employee_name = 'User'
+--------------
+DELETE FROM  XXCRM.ADMIN_SIGNUP_TABLE
+WHERE EMPLOYEE_NAME is null
 
