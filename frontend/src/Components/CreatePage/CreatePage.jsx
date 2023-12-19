@@ -86,12 +86,13 @@ const CreatePage = () => {
                     <table className='table table-striped-columns"'>
                         <thead className='table-info '>
                             <tr>
-
+                                <th>Transaction ID</th>
                                 <th>Payee ID</th>
                                 <th>Payee Name</th>
                                 <th>Cash Amount</th>
                                 <th>Mail</th>
                                 <th>Period</th>
+
                                 <th></th>
                             </tr>
                         </thead>
@@ -99,6 +100,7 @@ const CreatePage = () => {
                             {console.log('cy', customer)}
                             {customer.map((item, i) => (
                                 <tr key={i}>
+                                    <td>{item.TRANSACTION_ID}</td>
 
                                     <td>{item.PAYEE_ID}</td>
 
@@ -113,6 +115,7 @@ const CreatePage = () => {
                                             dateFormat="MMM-yy"
                                         />
                                     </td>
+
 
                                     <td><button className='btn btn-info text-light' onClick={() => handleSendButtonClick(item)} >Send</button></td>
 

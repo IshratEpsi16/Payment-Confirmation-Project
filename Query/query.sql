@@ -61,3 +61,18 @@ ALTER TABLE XXSSGIL_CASH_PAY_DET
 ADD Acknowledgement varchar(200)
 ------main table------------
 select * from  XXSSGIL_CASH_PAY_DET
+INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(
+ 
+            TRANSACTION_ID, PAYEE_ID, PAYEE_NAME, CASH_AMOUNT, MAIL_ADDRESS, CURRENT_PERIOD, CREATION_DATE)
+ 
+            VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, :mail_address,
+ 
+            to_char(:current_period,'MON-YY'), FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Dhaka')
+--adding role column in XXCRM.ADMIN_SIGNUP_TABLE --------------
+ALTER TABLE XXCRM.ADMIN_SIGNUP_TABLE
+ADD Role VARCHAR(255)
+select * from XXCRM.ADMIN_SIGNUP_TABLE
+UPDATE XXCRM.ADMIN_SIGNUP_TABLE
+SET role = 'user'
+WHERE employee_name = 'User'
+
