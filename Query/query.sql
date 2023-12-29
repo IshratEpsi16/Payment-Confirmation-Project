@@ -1,11 +1,12 @@
-CREATE TABLE XXCRM.ADMIN_TABLE (
-    Employee_ID int,
-    Email varchar(255),
-    Employee_Password varchar(255)
+CREATE TABLE XXCRM.NOTIFICATIONS (
+    PAYEE_ID int,
+    PAYEE_NAME varchar(255),
+   Notifications varchar(255)
 
 )
-INSERT INTO XXCRM.ADMIN_TABLE
-VALUES (6930,'ishrat.j@sevenringscement.com','12345')
+commit
+INSERT INTO XXCRM.NOTIFICATIONS 
+VALUES (76,'Masudur Rahman','Did you receive your payment?')
 commit
 select * from XXCRM.ADMIN_TABLE
 where EMAIL= ? and Employee_Password = ?
@@ -74,8 +75,16 @@ ADD Role VARCHAR(255)
 select * from XXCRM.ADMIN_SIGNUP_TABLE
 UPDATE XXCRM.ADMIN_SIGNUP_TABLE
 SET role = 'user'
-WHERE employee_name = 'User'
+WHERE employee_name = 'Masudur Rahman'
+commit
 --------------
+select * from  XXCRM.ADMIN_SIGNUP_TABLE
 DELETE FROM  XXCRM.ADMIN_SIGNUP_TABLE
 WHERE EMPLOYEE_NAME is null
 
+select * from  XXSSGIL_CASH_PAY_DET
+ALTER TABLE  XXSSGIL_CASH_PAY_DET
+RENAME COLUMN ATTRIBUTE1 TO Notifications
+UPDATE XXSSGIL_CASH_PAY_DET
+SET Notifications = 'Did you receive your payment?'
+WHERE PAYEE_ID = '76'

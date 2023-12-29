@@ -25,6 +25,10 @@
 }
 
 .nav {
-    margin-right: 70%;
+    margin-right: 50%;
     text-decoration: none;
+}
+
+.logout {
+    margin-left: 30%;
 }

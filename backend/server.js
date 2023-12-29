@@ -46,6 +46,44 @@ app.get('/', (req, res) => {
         });
     });
 });
+app.get('/notifications', (req, res) => {
+    oracledb.getConnection(dbConfig, (err, connection) => {
+        if (err) {
+            console.error('Error connecting to the database:', err.message);
+            return;
+        }
+
+        const sql = "select * from  XXCRM.NOTIFICATIONS"
+        connection.execute(sql, (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err.message);
+                connection.close();
+                return;
+            }
+
+            // Get column names dynamically
+            const columnNames = result.metaData.map(meta => meta.name);
+
+            // Convert the result rows to JSON format dynamically
+            const jsonData = result.rows.map(row => {
+                const rowObject = {};
+                columnNames.forEach((columnName, index) => {
+                    rowObject[columnName] = row[index];
+                });
+                return rowObject;
+            });
+
+            // Send the JSON response
+            res.json(jsonData);
+
+            connection.close();
+        });
+    });
+});
+
+
+
+
 
 app.post('/login', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {

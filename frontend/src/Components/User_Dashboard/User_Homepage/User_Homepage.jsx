@@ -1,10 +1,76 @@
+import axios from 'axios';
 import React from 'react';
+import { useNotificationContext } from '../../CreatePage/NotificationContext'
+import { useEffect, useState } from 'react';
 import img from '../../../../public/images/logo.png'
 import profile from '../../../../public/images/default-profile.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import './User_Homepage.css'
 const User_Homepage = () => {
+    //const { notifications, updateNotifications } = useNotificationContext();
+    const { notifications, updateNotifications } = useNotificationContext();
+    const [fetchNotifications, setFetchNotifications] = useState(false);
+    //const [notifications, setNotifications] = useState([]);
+
+    // const [payeeId, setPayeeId] = useState('');
+    // const [payeeName, setPayeeName] = useState('');
+    // const [notifications2, setNotifications2] = useState('');
+
+    // useEffect(() => {
+    //     axios.get('http://localhost:8081/notifications')
+    //         .then(res => setNotifications2(res.data))
+    //         .catch(err => console.log(err));
+    // }, []);
+
+
+    // useEffect(() => {
+    //     axios.get('http://localhost:8081/notifications')
+    //         .then(res => setNotifications(res.data))
+    //         .catch(err => console.log(err));
+    // }, []);
+
+    // useEffect(() => {
+    //     axios.get('http://localhost:8081/notifications')
+    //         .then((res) => setNotifications(res.data))
+    //         .catch((err) => console.log(err));
+    // }, []);
+
+    // useEffect(() => {
+    //     // This useEffect will run only once when the component mounts.
+    //     // It fetches initial notifications from the server.
+    //     axios.get('http://localhost:8081/notifications')
+    //         .then((res) => {
+    //             const notificationsData = res.data;
+    //             console.log('Initial notificationsData:', notificationsData);
+    //             // Update notifications in context
+    //             updateNotifications(notificationsData);
+    //         })
+    //         .catch((err) => console.log(err));
+    // }, []);
+
+
+    useEffect(() => {
+        if (fetchNotifications) {
+            axios.get('http://localhost:8081/notifications')
+                .then((res) => {
+                    const notificationsData = res.data;
+                    console.log('notificationsData:', notificationsData);
+                    // Update notifications in context
+                    updateNotifications(notificationsData);
+                })
+                .catch((err) => console.log(err));
+
+            // Reset the state after fetching notifications
+            updateNotifications([]);
+        }
+    }, [fetchNotifications]);
+    const handleButtonClick = () => {
+        // Set fetchNotifications to true when the button is clicked
+        setFetchNotifications(true);
+    };
+
+
     return (
         <div>
             <nav className="navbar bg-body-tertiary">
@@ -13,15 +79,10 @@ const User_Homepage = () => {
                         <img src={img} className='image' alt="Bootstrap" width="30" height="24" />
                     </a>
 
-                    <div className='nav'>
-
-                        <Link to='/create' style={{ textDecoration: 'none' }}>User Dashboard</Link>&nbsp;&nbsp;&nbsp;&nbsp;
-
-                    </div>
                     <div className='text-danger' >
 
-                        <svg fill='currentcolor' xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg>
-                        &nbsp; &nbsp;<button className='btn btn-outline-danger'>Logout</button>
+                        <svg style={{ height: '28px', width: '28px' }} fill='currentcolor' xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z" /></svg>
+
                     </div>
                 </div>
             </nav >
@@ -32,13 +93,52 @@ const User_Homepage = () => {
 
                     <div className='col-11'>
 
-                        <div className='search'>
-                            <form className="d-flex" role="search">
-                                <input style={{ width: '30%' }} className="form-control me-2" type="search" placeholder="Period" aria-label="Search" />
-                                <button className="btn btn-outline-primary" type="submit">Search</button>
-                            </form>
+                        <h3 className='text-center p-5 text-primary'>Welcome to User Homepage</h3>
+
+                        {/* 
+                        {console.log('notification:', notifications)}
+                        {notifications2.map((item, i) => (
+                            <tr key={i}>
+                                <h4>From get method</h4>
+                                <p>  {item.PAYEE_ID}</p>
+                                <p>  {item.PAYEE_NAME}</p>
+                                <p>{item.NOTIFICATIONS}</p>
+                                <p>----</p>
+                            </tr>
+                        ))} */}
+                        <h5>after click on send</h5>
+                        {/* {console.log('notification:', notifications)} */}
+
+                        {/* {notifications.map((item, i) => (
+                            <div key={i}>
+                                <h4>Notification {i + 1}</h4>
+                                <p>PAYEE_ID: {item.PAYEE_ID}</p>
+                                <p>PAYEE_NAME: {item.PAYEE_NAME}</p>
+                                <p>NOTIFICATIONS: {item.NOTIFICATIONS}</p>
+                                <p>----</p>
+                            </div>
+                        ))} */}
+
+                        {/* 
+                        {notifications.map((notification, i) => (
+                            <div key={i}>{notification.PAYEE_ID}</div>
+                        ))} */}
+                        <div>
+                            <button onClick={handleButtonClick}>Click Me</button>
+                            {/* Render notifications from context only if fetchNotifications is true */}
+                            {fetchNotifications && (
+                                <div>
+                                    {notifications.map((notification, i) => (
+                                        <div key={i}>{notification.NOTIFICATIONS}</div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
+
                     </div>
+
+
+
                     <div className='col-1'>
                         <div className='right' style={{ height: '638px', width: '197px' }}>
                             <img src={profile} className='icon' alt="Bootstrap" width="30" height="24" />
@@ -47,6 +147,9 @@ const User_Homepage = () => {
                                 <p>Name :</p>
                                 <p>Phone:</p>
                                 <p>Mail :</p>
+                            </div>
+                            <div className='logout'>
+                                <button className='btn btn-success ' >Logout</button>
                             </div>
                         </div>
 

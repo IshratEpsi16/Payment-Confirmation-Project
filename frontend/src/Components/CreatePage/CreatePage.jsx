@@ -2,6 +2,7 @@ import React from 'react';
 import './CreatePage.css'
 import img from '../../../public/images/logo.png'
 import { useEffect } from 'react';
+import { useNotificationContext } from '../CreatePage/NotificationContext'
 import DatePicker from 'react-datepicker';
 import { useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -9,14 +10,17 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 const CreatePage = () => {
-
+    // const { setFetchNotifications } = useNotificationContext();
+    const { updateNotifications } = useNotificationContext();
     const [customer, setCustomer] = useState([]);
     const [payeeId, setPayeeId] = useState('');
+    const [notify, setNotify] = useState('');
     const [payeeName, setPayeeName] = useState('');
     const [cashAmount, setCashAmount] = useState('');
     const [mailAddress, setMailAddress] = useState('');
     const [currentPeriod, setCurrentPeriod] = useState('');
     const [selectedRow, setSelectedRow] = useState(null);
+    const { fetchNotifications, setFetchNotifications } = useNotificationContext();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     useEffect(() => {
@@ -32,9 +36,49 @@ const CreatePage = () => {
 
     const navigate = useNavigate();
 
-    function handleSendButtonClick(item) {
+
+
+    const handleSendButtonClick = (item) => {
         setSelectedRow(item);
-    }
+        setFetchNotifications(true);
+    };
+
+    useEffect(() => {
+        if (fetchNotifications) {
+            axios.get('http://localhost:8081/notifications')
+                .then(res => {
+                    const notificationsData = res.data;
+                    console.log('notificationsData:', notificationsData);
+                    // Update notifications in context
+                    setNotify(notificationsData);
+                })
+                .catch(err => console.error(err))
+                .finally(() => setFetchNotifications(false)); // Reset the state after fetching notifications
+        }
+    }, [fetchNotifications]);
+
+
+
+
+
+    // const handleSendButtonClick = (item) => {
+    //     setSelectedRow(item);
+    //     // Trigger the fetch and update notifications in User_Homepage
+    //     axios.get('http://localhost:8081/notifications')
+    //         .then(res => {
+    //             const notificationsData = res.data;
+    //             console.log('notificationsData:', notificationsData);
+    //             // Set notifications in User_Homepage
+    //             setNotify(notificationsData);
+    //         })
+    //         .catch(err => console.error(err));
+    // };
+
+    useEffect(() => {
+        axios.get('http://localhost:8081/')
+            .then(res => setCustomer(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
     function handleSubmit(event) {
         event.preventDefault();
