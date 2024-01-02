@@ -46,6 +46,41 @@ app.get('/', (req, res) => {
         });
     });
 });
+// app.get('/notifications', (req, res) => {
+//     oracledb.getConnection(dbConfig, (err, connection) => {
+//         if (err) {
+//             console.error('Error connecting to the database:', err.message);
+//             return;
+//         }
+
+//         const sql = "select * from  XXCRM.NOTIFICATIONS"
+//         connection.execute(sql, (err, result) => {
+//             if (err) {
+//                 console.error('Error executing query:', err.message);
+//                 connection.close();
+//                 return;
+//             }
+
+//             // Get column names dynamically
+//             const columnNames = result.metaData.map(meta => meta.name);
+
+//             // Convert the result rows to JSON format dynamically
+//             const jsonData = result.rows.map(row => {
+//                 const rowObject = {};
+//                 columnNames.forEach((columnName, index) => {
+//                     rowObject[columnName] = row[index];
+//                 });
+//                 return rowObject;
+//             });
+
+//             // Send the JSON response
+//             res.json(jsonData);
+
+//             connection.close();
+//         });
+//     });
+// });
+
 app.get('/notifications', (req, res) => {
     oracledb.getConnection(dbConfig, (err, connection) => {
         if (err) {
@@ -53,7 +88,7 @@ app.get('/notifications', (req, res) => {
             return;
         }
 
-        const sql = "select * from  XXCRM.NOTIFICATIONS"
+        const sql = " select XCPD.PAYEE_ID,XCPD.PAYEE_NAME,XAST.EMPLOYEE_ID,XN.NOTIFICATIONS from XXSSGIL_CASH_PAY_DET XCPD, XXCRM.ADMIN_SIGNUP_TABLE XAST, XXCRM.NOTIFICATIONS XN where 1=1 and XCPD.PAYEE_ID=XAST.EMPLOYEE_ID and  XCPD.PAYEE_ID = XN.PAYEE_ID and XAST.EMPLOYEE_ID = XN.PAYEE_ID and XCPD.STATUS = 'Sent'"
         connection.execute(sql, (err, result) => {
             if (err) {
                 console.error('Error executing query:', err.message);
@@ -80,7 +115,6 @@ app.get('/notifications', (req, res) => {
         });
     });
 });
-
 
 
 
@@ -188,13 +222,9 @@ app.post('/create', (req, res) => {
         const current_period = req.body.currentPeriod;
         const sql =
             "INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(" +
-            "TRANSACTION_ID, PAYEE_ID, PAYEE_NAME, CASH_AMOUNT, MAIL_ADDRESS, CURRENT_PERIOD, CREATION_DATE) " +
-            "VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, :mail_address, " +
+            "TRANSACTION_ID, PAYEE_ID, PAYEE_NAME, CASH_AMOUNT,STATUS, MAIL_ADDRESS, CURRENT_PERIOD, CREATION_DATE) " +
+            "VALUES (xxcrm.XXSSGIL_CASH_PAY_S.nextval, :payee_id, :payee_name, :cash_amount, 'Sent', :mail_address, " +
             "TO_CHAR(TO_DATE(:current_period, 'MM/DD/YYYY HH:MI:SS AM'), 'Mon-YY'), FROM_TZ(CAST(SYSDATE AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Dhaka')";
-
-
-
-
 
         const bindVars = {
             payee_id: payee_id,

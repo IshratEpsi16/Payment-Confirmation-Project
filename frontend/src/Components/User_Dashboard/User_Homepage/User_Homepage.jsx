@@ -9,19 +9,19 @@ import { Link } from 'react-router-dom';
 import './User_Homepage.css'
 const User_Homepage = () => {
     //const { notifications, updateNotifications } = useNotificationContext();
-    const { notifications, updateNotifications } = useNotificationContext();
-    const [fetchNotifications, setFetchNotifications] = useState(false);
-    //const [notifications, setNotifications] = useState([]);
+    //const { notifications, updateNotifications } = useNotificationContext();
+    // const [fetchNotifications, setFetchNotifications] = useState(false);
+    const [notifications, setNotifications] = useState([]);
 
     // const [payeeId, setPayeeId] = useState('');
     // const [payeeName, setPayeeName] = useState('');
     // const [notifications2, setNotifications2] = useState('');
 
-    // useEffect(() => {
-    //     axios.get('http://localhost:8081/notifications')
-    //         .then(res => setNotifications2(res.data))
-    //         .catch(err => console.log(err));
-    // }, []);
+    useEffect(() => {
+        axios.get('http://localhost:8081/notifications')
+            .then(res => setNotifications(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
 
     // useEffect(() => {
@@ -50,25 +50,25 @@ const User_Homepage = () => {
     // }, []);
 
 
-    useEffect(() => {
-        if (fetchNotifications) {
-            axios.get('http://localhost:8081/notifications')
-                .then((res) => {
-                    const notificationsData = res.data;
-                    console.log('notificationsData:', notificationsData);
-                    // Update notifications in context
-                    updateNotifications(notificationsData);
-                })
-                .catch((err) => console.log(err));
+    // useEffect(() => {
+    //     if (fetchNotifications) {
+    //         axios.get('http://localhost:8081/notifications')
+    //             .then((res) => {
+    //                 const notificationsData = res.data;
+    //                 console.log('notificationsData:', notificationsData);
+    //                 // Update notifications in context
+    //                 updateNotifications(notificationsData);
+    //             })
+    //             .catch((err) => console.log(err));
 
-            // Reset the state after fetching notifications
-            updateNotifications([]);
-        }
-    }, [fetchNotifications]);
-    const handleButtonClick = () => {
-        // Set fetchNotifications to true when the button is clicked
-        setFetchNotifications(true);
-    };
+    //         // Reset the state after fetching notifications
+    //         updateNotifications([]);
+    //     }
+    // }, [fetchNotifications]);
+    // const handleButtonClick = () => {
+    //     // Set fetchNotifications to true when the button is clicked
+    //     setFetchNotifications(true);
+    // };
 
 
     return (
@@ -95,18 +95,20 @@ const User_Homepage = () => {
 
                         <h3 className='text-center p-5 text-primary'>Welcome to User Homepage</h3>
 
-                        {/* 
+                        <h5>after click on send</h5>
                         {console.log('notification:', notifications)}
-                        {notifications2.map((item, i) => (
+                        {notifications.map((item, i) => (
                             <tr key={i}>
-                                <h4>From get method</h4>
+
                                 <p>  {item.PAYEE_ID}</p>
                                 <p>  {item.PAYEE_NAME}</p>
                                 <p>{item.NOTIFICATIONS}</p>
+                                <p> EMPLOYEE_ID{item.EMPLOYEE_ID}</p>
+
                                 <p>----</p>
                             </tr>
-                        ))} */}
-                        <h5>after click on send</h5>
+                        ))}
+
                         {/* {console.log('notification:', notifications)} */}
 
                         {/* {notifications.map((item, i) => (
@@ -123,9 +125,10 @@ const User_Homepage = () => {
                         {notifications.map((notification, i) => (
                             <div key={i}>{notification.PAYEE_ID}</div>
                         ))} */}
+                        {/* 
                         <div>
                             <button onClick={handleButtonClick}>Click Me</button>
-                            {/* Render notifications from context only if fetchNotifications is true */}
+                          
                             {fetchNotifications && (
                                 <div>
                                     {notifications.map((notification, i) => (
@@ -133,7 +136,7 @@ const User_Homepage = () => {
                                     ))}
                                 </div>
                             )}
-                        </div>
+                        </div> */}
 
                     </div>
 
