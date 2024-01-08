@@ -127,12 +127,14 @@ app.post('/login', (req, res) => {
         }
 
         const sql =
-            "SELECT EMPLOYEE_ID, EMPLOYEE_PASSWORD, ROLE FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
+            "SELECT EMPLOYEE_ID, EMPLOYEE_PASSWORD, ROLE,EMPLOYEE_NAME,PHONE_NUMBER,EMAIL FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
 
         const bindParams = {
             employee_id: parseInt(req.body.employeeId),
-            employee_password: req.body.employeePassword
+            employee_password: req.body.employeePassword,
+
         };
+
 
         connection.execute(sql, bindParams, { autoCommit: true }, (err, result) => {
             if (err) {
@@ -142,14 +144,19 @@ app.post('/login', (req, res) => {
             }
 
             // Log the entire result object to inspect its structure
-            console.log('result:', result);
+            //  console.log('result:', result);
 
             if (result.rows.length > 0) {
                 const user1 = result.rows[0];
 
                 // Check if the ROLE information exists in the user1 array
                 const role = user1[2]; // Assuming ROLE is in the third position (index 2)
-
+                console.log('password', user1[1])
+                console.log('role', user1[2])
+                console.log('name', user1[3])
+                console.log('phone number', user1[4])
+                console.log('ID', user1[0])
+                console.log('mail', user1[5])
                 console.log('role:', role); // Log the role to check its value
 
                 if (role === 'admin') {

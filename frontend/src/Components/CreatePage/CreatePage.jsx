@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 const CreatePage = () => {
     // const { setFetchNotifications } = useNotificationContext();
     const { updateNotifications } = useNotificationContext();
+    const [employeeId, setEmployeeId] = useState('')
     const [customer, setCustomer] = useState([]);
     const [payeeId, setPayeeId] = useState('');
     const [notify, setNotify] = useState('');
