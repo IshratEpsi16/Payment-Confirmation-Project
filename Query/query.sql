@@ -20,7 +20,7 @@ ALTER TABLE  XXCRM.ADMIN_TABLE
 ADD COLUMN phone_number VARCHAR(15)
 -------------
 CREATE TABLE XXCRM.ADMIN_SIGNUP_TABLE (
-    Employee_ID int,
+    Employee_ID varchar(255),
     Employee_Name varchar(255),
     Phone_Number varchar(2555),
     Email varchar(255),
@@ -28,6 +28,8 @@ CREATE TABLE XXCRM.ADMIN_SIGNUP_TABLE (
    Confirm_Password varchar(255)
 
 )
+DROP TABLE XXCRM.ADMIN_SIGNUP_TABLE
+commit
 SELECT * FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE Employee_ID = :employee_id AND Employee_Password = :employee_password
 INSERT INTO XXCRM.ADMIN_SIGNUP_TABLE
 VALUES (6930,'Ishrat Jahan Epsi','01531741539','ishrat.j@sevenringscement.com','Epsi69#@','Epsi69#@')
@@ -72,15 +74,19 @@ INSERT INTO XXCRM.XXSSGIL_CASH_PAY_DET(
 --adding role column in XXCRM.ADMIN_SIGNUP_TABLE --------------
 ALTER TABLE XXCRM.ADMIN_SIGNUP_TABLE
 ADD Role VARCHAR(255)
-select * from XXCRM.ADMIN_SIGNUP_TABLE
+
+select * from XXCRM.ADMIN_SIGNUP_TABLE where ROLE is null
+
 UPDATE XXCRM.ADMIN_SIGNUP_TABLE
 SET role = 'user'
-WHERE employee_name = 'Salim'
+WHERE employee_name = 'Masudur Rahman'
 commit
 --------------
-select * from  XXSSGIL_CASH_PAY_DET
+select * from  XXCRM.ADMIN_SIGNUP_TABLE
 DELETE FROM  XXSSGIL_CASH_PAY_DET
 WHERE status = 'Sent' 
+DELETE FROM  XXCRM.ADMIN_SIGNUP_TABLE
+WHERE EMPLOYEE_PASSWORD = 'Epsi69#@' 
 commit
 select * from  XXSSGIL_CASH_PAY_DET
 ALTER TABLE  XXSSGIL_CASH_PAY_DET

@@ -27,11 +27,12 @@ const Login = () => {
 
                 if (res.data || res.data.status === 'success') {
                     const role = res.data.role;
+                    console.log('role', role)
 
                     if (role === 'admin') {
                         // Redirect to the admin page
                         navigate('/home');
-                    } else if (role === 'user') {
+                    } else if (role == null) {
                         // Redirect to the user page
                         navigate('/userhome');
                     } else {
@@ -65,7 +66,7 @@ const Login = () => {
                 <form action='POST' onSubmit={handleSubmit}>
                     <div className="m-3 text-color1 ">
                         <label htmlFor="employeeID" className=" form-label">Employee ID</label>
-                        <input type="number" value={employeeId} onChange={e => setEmployeeId(e.target.value)} className="form-control" id="employeeID" />
+                        <input type="text" value={employeeId} onChange={e => setEmployeeId(e.target.value)} className="form-control" id="employeeID" />
 
 
                     </div>

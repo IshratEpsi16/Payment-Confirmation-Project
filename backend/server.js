@@ -130,7 +130,7 @@ app.post('/login', (req, res) => {
             "SELECT EMPLOYEE_ID, EMPLOYEE_PASSWORD, ROLE,EMPLOYEE_NAME,PHONE_NUMBER,EMAIL FROM XXCRM.ADMIN_SIGNUP_TABLE WHERE EMPLOYEE_ID = :employee_id AND EMPLOYEE_PASSWORD = :employee_password";
 
         const bindParams = {
-            employee_id: parseInt(req.body.employeeId),
+            employee_id: req.body.employeeId,
             employee_password: req.body.employeePassword,
 
         };
@@ -162,9 +162,9 @@ app.post('/login', (req, res) => {
                 if (role === 'admin') {
                     connection.close();
                     return res.json({ status: 'success', role: 'admin' });
-                } else if (role === 'user') {
+                } else if (role == null) {
                     connection.close();
-                    return res.json({ status: 'success', role: 'user' });
+                    return res.json({ status: 'success', role: null });
                 } else {
                     connection.close();
                     return res.status(401).json({ error: 'Invalid role' });

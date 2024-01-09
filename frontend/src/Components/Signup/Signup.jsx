@@ -81,7 +81,7 @@ const SignUp = () => {
                 <form action='' onSubmit={handleSubmit}>
                     <div className="m-3 text-color1">
                         <label htmlFor="employeeID" className="form-label">Employee ID</label>
-                        <input type="number" onChange={e => setEmployeeId(e.target.value)} className="form-control" id="employeeID" />
+                        <input type="text" onChange={e => setEmployeeId(e.target.value)} className="form-control" id="employeeID" />
 
                     </div>
                     <div className="m-3 text-color1">
